@@ -1,0 +1,11 @@
+<div class="options row">
+  <div class="col-md-4">
+    Answer 1: <%= question.answers.first.vote_count %>
+  </div>
+  <div class="col-md-4">
+    Total Votes: <%= question.answers.first.vote_count + question.answers.last.vote_count %>
+  </div>
+  <div class="col-md-4">
+    Answer 2: <%= question.answers.last.vote_count %>
+  </div>
+</div>
