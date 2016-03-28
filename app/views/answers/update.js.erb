@@ -1,1 +1,8 @@
-$("#vote-results").html("<%= j render(partial: 'questions/vote_result', locals: { question: @answer.question }) %>")
+$(document).off("ajax:success");
+$(document).on("ajax:success", function(e, data, status, xhr) {
+  var target = $(e.target).closest('.options').siblings('.vote-results');
+  $(target).html("<%= j render(partial: 'questions/vote_result', locals: { question: @answer.question }) %>")
+  var text = $(e.target).text();
+  console.log(target.length);
+  $(e.target).parent().html(text);
+});

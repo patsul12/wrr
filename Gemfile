@@ -10,6 +10,7 @@ gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'devise'
+gem 'jquery-turbolinks'
 
 group :development do
   gem 'byebug'
