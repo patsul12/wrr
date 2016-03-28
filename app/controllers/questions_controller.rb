@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
+  before_action :set_question, only: [:edit, :update, :destroy]
+  before_action :set_questions, only: [:index, :create, :update, :destroy]
+
   def index
-    @questions = Question.all
     @question = Question.new
   end
 
@@ -20,14 +22,11 @@ class QuestionsController < ApplicationController
 
   def edit
     respond_to do |format|
-      @question = Question.find(params[:id])
       format.js
     end
   end
 
   def update
-    @questions = Question.all
-    @question = Question.find(params[:id])
     if @question.update(question_params)
       respond_to do |format|
         format.js
@@ -37,7 +36,25 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def destroy
+    if @question.destroy
+      respond_to do |format|
+        format.js
+      end
+    else
+      redirect_to root_path
+    end
+  end
+
   private
+
+  def set_question
+    @question = Question.find(params[:id])
+  end
+
+  def set_questions
+    @questions = Question.all
+  end
 
   def question_params
     params.require(:question).permit(:content)
