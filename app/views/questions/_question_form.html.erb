@@ -1,7 +1,30 @@
+<% if answer_a %>
+  <% @answer_a_content = answer_a.content %>
+<% else %>
+  <% @answer_a_content = nil %>
+<% end %>
+
+<% if answer_b %>
+  <% @answer_b_content = answer_b.content %>
+<% else %>
+  <% @answer_b_content = nil %>
+<% end %>
+
 <%= form_for question, remote: true do |f| %>
   <div class="form-group">
-    <%= f.label :content, "What's your question" %>
-    <%= f.text_area :content, class: "form-control" %>
+    <%= f.fields_for :answer_a do |a| %>
+      <%= a.label "Option A" %>
+      <%= a.label :content, "Content" %>
+      <%= a.text_field :content, value: @answer_a_content %>
+    <% end %>
+  </div>
+  <div class="form-group">
+    <%= f.fields_for :answer_b do |a| %>
+      <%= a.label "Option B" %>
+      <%= a.label :content, "Content" %>
+      <%= a.text_field :content, value: @answer_b_content %>
+    <% end %>
+  </div>
   </div>
   <div class="form-group">
     <%= f.submit "Submit", class: "btn btn-success" %>

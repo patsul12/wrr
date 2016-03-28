@@ -2,17 +2,25 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [:edit, :update, :destroy]
   before_action :set_questions, only: [:index, :create, :update, :destroy]
 
+  def new
+    @question = Question.new
+  end
+  
   def index
     @question = Question.new
   end
 
   def create
-    @question = Question.create(question_params)
+    @question = Question.create()
     if @question.save
-      flash[:notice] = "Question successfully created."
-      respond_to do |format|
-        format.html { redirect_to root_path }
-        format.js
+      @answer_a = @question.answers.create(question_params[:answer_a])
+      @answer_b = @question.answers.create(question_params[:answer_b])
+      if @answer_a.save && @answer_b.save
+        flash[:notice] = "Question successfully created."
+        respond_to do |format|
+          format.html { redirect_to root_path }
+          format.js
+        end
       end
     else
       flash[:alert] = "Errors occured while saving question."
@@ -27,7 +35,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
+    if @question.answers.first.update(question_params[:answer_a]) && @question.answers.last.update(question_params[:answer_b])
       respond_to do |format|
         format.js
       end
@@ -57,6 +65,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:content)
+    params.require(:question).permit(answer_a: [:content], answer_b: [:content])
   end
 end

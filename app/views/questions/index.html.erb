@@ -1,7 +1,4 @@
-<button type="button" id="question-form-toggle">Add a Question</button>
-<div id="new-question-form" hidden>
-  <%= render partial: "question_form", locals: { question: @question } %>
-</div>
+<%= link_to "Add a Question", new_question_path, remote: true %>
 <div id="questions-wrapper">
   <%= render @questions %>
 </div>

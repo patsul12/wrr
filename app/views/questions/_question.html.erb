@@ -1,5 +1,10 @@
 <div class="question-tile">
-  <%= question.content %>
+  <div class="options">
+    <h3>Would you rrrrrrather</h3>
+    <%= question.answers.first.content %>
+    <h3>OR</h3>
+    <%= question.answers.last.content %>
+  </div>
   <%= link_to "edit",  edit_question_path(question), class: "btn btn-warning", remote: true %>
   <%= link_to "delete",  question_path(question), class: "btn btn-warning", remote: true, method: "delete" %>
 </div>
