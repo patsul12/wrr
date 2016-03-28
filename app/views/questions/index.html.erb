@@ -1,0 +1,7 @@
+<button type="button" id="question-form-toggle">Add a Question</button>
+<div id="new-question-form" hidden>
+  <%= render partial: "question_form", locals: { question: @question } %>
+</div>
+<div id="questions-wrapper">
+  <%= render @questions %>
+</div>
