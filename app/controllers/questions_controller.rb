@@ -18,6 +18,25 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def edit
+    respond_to do |format|
+      @question = Question.find(params[:id])
+      format.js
+    end
+  end
+
+  def update
+    @questions = Question.all
+    @question = Question.find(params[:id])
+    if @question.update(question_params)
+      respond_to do |format|
+        format.js
+      end
+    else
+      redirect_to root_path
+    end
+  end
+
   private
 
   def question_params
