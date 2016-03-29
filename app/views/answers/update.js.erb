@@ -1,11 +1,19 @@
 $(document).off("ajax:success");
 $(document).on("ajax:success", function(e, data, status, xhr) {
+  var vote_count1 = "<%= @answer.question.answers.first.vote_count %>";
+  var vote_count2 = "<%= @answer.question.answers.last.vote_count %>";
+  var total_votes = parseInt(vote_count1) + parseInt(vote_count2);
+
   function tweenPie(finish) {
     var start = { startAngle: 0,
                   endAngle: 0
                 };
     var i = d3.interpolate(start, finish);
     return function(d) { return arc(i(d)); };
+  };
+
+  function formatData(d) {
+    return(((parseFloat(d) / parseFloat(total_votes)) * 100).toFixed(2).toString() + "%")
   };
 
   var target = $(e.target).closest('.options').siblings('.vote-results');
@@ -25,8 +33,8 @@ $(document).on("ajax:success", function(e, data, status, xhr) {
       .innerRadius(radius - 90);
 
   var labelArc = d3.svg.arc()
-    .outerRadius(radius - 40)
-    .innerRadius(radius - 40);
+    .outerRadius(radius - 10)
+    .innerRadius(radius - 90);
 
   var pie = d3.layout.pie()
       .sort(null)
@@ -38,8 +46,6 @@ $(document).on("ajax:success", function(e, data, status, xhr) {
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  var vote_count1 = "<%= @answer.question.answers.first.vote_count %>";
-  var vote_count2 = "<%= @answer.question.answers.last.vote_count %>";
   var data = [parseInt(vote_count1), parseInt(vote_count2)]
   var g = svg.selectAll(".arc")
       .data(pie(data))
@@ -51,16 +57,17 @@ $(document).on("ajax:success", function(e, data, status, xhr) {
           .style("fill", function(d) { return color(d.data) })
           .transition()
           .ease("bounce")
-          // .ease("elastic")
+           // .ease("elastic")
           .duration(2000)
           .attrTween('d', tweenPie)
 
       g.append("text")
           .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
           .attr("dy", ".35em")
-          .text(function(d) { return d.data })
+          .text(function(d) { return formatData(parseInt(d.data)) })
           .style('opacity', 0.0)
           .transition()
           .duration(1250)
-          .style('opacity', 1.0);
+          .style('opacity', 1.0)
+          .style('text-anchor', 'middle')
 });
