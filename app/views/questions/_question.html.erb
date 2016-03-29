@@ -2,13 +2,13 @@
   <div class="options row">
     <h2>Would You Rather?</h2>
     <div class="col-md-4">
-      <h3><%= link_to question.answers.first.content, answer_path(question.answers.first), remote: true, method: "patch", cache: false %></h3>
+      <h3><%= link_to question.answers.first.content, answer_path(question.answers.first), remote: true, method: "patch", cache: false, class: "response" %></h3>
     </div>
     <div class="col-md-4">
       <h3>OR</h3>
     </div>
     <div class="col-md-4">
-      <h3><%= link_to question.answers.last.content, answer_path(question.answers.last), remote: true, method: "patch", cache: false %></h3>
+      <h3><%= link_to question.answers.last.content, answer_path(question.answers.last), remote: true, method: "patch", cache: false, class: "response" %></h3>
     </div>
   </div>
   <div class="vote-results"></div>

@@ -3,6 +3,46 @@ $(document).on("ajax:success", function(e, data, status, xhr) {
   var target = $(e.target).closest('.options').siblings('.vote-results');
   $(target).html("<%= j render(partial: 'questions/vote_result', locals: { question: @answer.question }) %>")
   var text = $(e.target).text();
-  console.log(target.length);
+  console.log(target);
   $(e.target).parent().html(text);
+  var width = 300,
+      height = 300,
+      radius = Math.min(width, height) / 2;
+  var color = d3.scale.ordinal()
+      .range(["#98abc5", "ff8c00"]);
+
+  var arc = d3.svg.arc()
+      .outerRadius(radius - 10)
+      .innerRadius(0);
+
+  var labelArc = d3.svg.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40);
+
+  var pie = d3.layout.pie()
+      .sort(null)
+      .value(function(d) { return d; });
+
+  var svg = d3.select(target[0]).append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+  var vote_count1 = "<%= @answer.question.answers.first.vote_count %>";
+  var vote_count2 = "<%= @answer.question.answers.last.vote_count %>";
+  var data = [parseInt(vote_count1), parseInt(vote_count2)]
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+      .enter().append("g")
+      .attr("class", "arc");
+
+      g.append("path")
+          .attr("d", arc)
+          .style("fill", function(d) { return color(d.data) });
+
+      g.append("text")
+          .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+          .attr("dy", ".35em")
+          .text(function(d) { return d.data });
 });
