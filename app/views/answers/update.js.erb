@@ -1,5 +1,13 @@
 $(document).off("ajax:success");
 $(document).on("ajax:success", function(e, data, status, xhr) {
+  function tweenPie(finish) {
+    var start = { startAngle: 0,
+                  endAngle: 0
+                };
+    var i = d3.interpolate(start, finish);
+    return function(d) { return arc(i(d)); };
+  };
+
   var target = $(e.target).closest('.options').siblings('.vote-results');
   $(target).html("<%= j render(partial: 'questions/vote_result', locals: { question: @answer.question }) %>")
   var text = $(e.target).text();
@@ -8,12 +16,13 @@ $(document).on("ajax:success", function(e, data, status, xhr) {
   var width = 300,
       height = 300,
       radius = Math.min(width, height) / 2;
+
   var color = d3.scale.ordinal()
       .range(["#98abc5", "ff8c00"]);
 
   var arc = d3.svg.arc()
       .outerRadius(radius - 10)
-      .innerRadius(0);
+      .innerRadius(radius - 90);
 
   var labelArc = d3.svg.arc()
     .outerRadius(radius - 40)
@@ -39,10 +48,19 @@ $(document).on("ajax:success", function(e, data, status, xhr) {
 
       g.append("path")
           .attr("d", arc)
-          .style("fill", function(d) { return color(d.data) });
+          .style("fill", function(d) { return color(d.data) })
+          .transition()
+          .ease("bounce")
+          // .ease("elastic")
+          .duration(2000)
+          .attrTween('d', tweenPie)
 
       g.append("text")
           .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
           .attr("dy", ".35em")
-          .text(function(d) { return d.data });
+          .text(function(d) { return d.data })
+          .style('opacity', 0.0)
+          .transition()
+          .duration(1250)
+          .style('opacity', 1.0);
 });
